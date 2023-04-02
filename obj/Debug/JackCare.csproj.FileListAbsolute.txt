@@ -1,0 +1,10 @@
+C:\Users\Miloe\source\repos\JackCare\JackCare\bin\Debug\JackCare.exe.config
+C:\Users\Miloe\source\repos\JackCare\JackCare\bin\Debug\JackCare.exe
+C:\Users\Miloe\source\repos\JackCare\JackCare\bin\Debug\JackCare.pdb
+C:\Users\Miloe\source\repos\JackCare\JackCare\obj\Debug\JackCare.csproj.AssemblyReference.cache
+C:\Users\Miloe\source\repos\JackCare\JackCare\obj\Debug\JackCare.csproj.SuggestedBindingRedirects.cache
+C:\Users\Miloe\source\repos\JackCare\JackCare\obj\Debug\JackCare.Properties.Resources.resources
+C:\Users\Miloe\source\repos\JackCare\JackCare\obj\Debug\JackCare.csproj.GenerateResource.cache
+C:\Users\Miloe\source\repos\JackCare\JackCare\obj\Debug\JackCare.csproj.CoreCompileInputs.cache
+C:\Users\Miloe\source\repos\JackCare\JackCare\obj\Debug\JackCare.exe
+C:\Users\Miloe\source\repos\JackCare\JackCare\obj\Debug\JackCare.pdb
