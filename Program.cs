@@ -10,16 +10,31 @@ namespace JackCare
 {
     internal static class Program
     {
-        string[] feeling = {"","" };
+        static string[] feeling = { "How are you today?", "How would you describe your current emotional state?", "How are you feeling today?" };
+        static string[] meds = { "Have you taken your meds?", "Did you remember to take your medication today?", "Have you taken your medication yet today, darling?"};
+        static string[] drink = { "Have you drank at least 0.5 liters today?", "Have you drank enough water today?", "Have you gotten enough water?" };
+        static string[] anyFood = { "Have you eaten something filling?", "Have you had a satisfying meal today?", "Have you eaten a meal that made you feel full?" };
+        static string[] goodFood = { "Have you eaten something nutritious?", "Did you eat any healthy foods today?", "Have you eaten a meal or snack that has good nutritional value?" };
+        static string[] drugs = { "How long ago did you drink alcohol or take drugs?", "When was the last time you consumed alcohol or drugs?", "How long ago it last was when you took drugs or alcohol?" };
+        static string[] sleep = { "When did you go to sleep yesterday?", "What time did you go to bed yesterday?", "What time did you go to sleep last night?" };
+        static string[] sleepTime = { "How long did you sleep for?", "How many hours did you sleep last night?", "How many hours did you sleep for?" };
+        static string[] sun = { "Have you spent at least 20 min outside today?", "Have you spent any time outdoors today?", "Have you gotten any fresh air today?" };
 
         static string[][] question =
         {
-            "How are you today?",
-            "Have you taken your meds?",
-            "Have you drank atleast 0.5 liters?",
-            "Have you ate something filling?",
-            "Have you ate something nutritious?",
+            feeling,
+            meds,
+            drink,
+            anyFood,
+            goodFood,
+            drugs,
+            sleep,
+            sleepTime,
+            sun
         };
+        //true is text
+        //flase is yes no
+        static bool[] answerType = { true, false, false, false, false, true, true, true, false};
         
 
         static bool firstTime = true;
@@ -33,24 +48,42 @@ namespace JackCare
             firstTime = GetFirstTimeOpened();
             if(firstTime)
             {
-                Thread.Sleep(1000);
+                //SleepUntill(22);
+                MessageBox.Show("Hello Jack. This is JackCare, a program that is unclosable and unremovable. " +
+                    "It will monitor your health through a multitude of questions that will be asked daily. " +
+                    "This is for the betterment of your own health and as such it is important that you answer truthfully. " +
+                    "\n I love you so very much and this is my nerdy way of helping. <3" +
+                    "\n Your first set of questions will come tomorrow.");
             }
             List<string> questions =new List<string>();
             List<string> answers = new List<string>();
             while(true)
             {
+                SleepUntill(17);
                 SystemSounds.Exclamation.Play();
-
+                BoolInputForm BinputForm;
+                TextInputForm TinputForm;
+                Random rnd = new Random();
                 #region Forms
+                for (int i = 0; i < question.GetLength(0); i++)
+                {
+                    string q = question[i] [rnd.Next(question.GetLength(1))];
+                    if (answerType[i])
+                    {
+                        TinputForm = new TextInputForm(q,250);
 
-                BoolInputForm inputForm = new BoolInputForm();
-                 
-                answers.Add(inputForm.GetName());
+                        answers.Add(TinputForm.GetAnswer());
+                    }
+                    else
+                    {
+                        BinputForm = new BoolInputForm(q);
 
+                        answers.Add(BinputForm.GetAnswer());
+                    }
+                    questions.Add(q = question[i][0]);
+                }
                 #endregion
                 WriteFile(questions.ToArray(), answers.ToArray());
-                Thread.Sleep(1000);
-
                 firstTime = false;
             }
 
@@ -91,6 +124,22 @@ namespace JackCare
             }
         }
         #endregion 
+
+        public static void SleepUntill(int hour, int min = 0, int second = 0)
+        {
+            DateTime now = DateTime.Now;
+
+            // Calculate the time until 9:00 AM
+            DateTime targetTime = new DateTime(now.Year, now.Month, now.Day, hour, min, second);
+            if (now > targetTime)
+            {
+                targetTime = targetTime.AddDays(1);
+            }
+            TimeSpan timeUntilTarget = targetTime - now;
+
+            // Sleep the thread until the target time
+            Thread.Sleep(timeUntilTarget);
+        }
 
 
         private static void WriteFile(string[] question, string[] answer)
@@ -223,7 +272,16 @@ namespace JackCare
         private void nextButton_Click(object sender, EventArgs e)
         {
             // Close the form and return the user's input
-            DialogResult = DialogResult.Yes;
+            DialogResult = DialogResult.OK;
+        }
+
+        public string GetAnswer()
+        {
+            ShowDialog();
+            
+            return TextBox.Text;
+            
+            
         }
 
     }
