@@ -2,7 +2,8 @@
 using System.IO;
 using System.Media;
 using System.Collections.Generic;
-using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -10,6 +11,8 @@ namespace JackCare
 {
     internal static class Program
     {
+        #region Questions
+
         static string[] feeling = { "How are you today?", "How would you describe your current emotional state?", "How are you feeling today?" };
         static string[] meds = { "Have you taken your meds?", "Did you remember to take your medication today?", "Have you taken your medication yet today, darling?"};
         static string[] drink = { "Have you drank at least 0.5 liters today?", "Have you drank enough water today?", "Have you gotten enough water?" };
@@ -32,6 +35,7 @@ namespace JackCare
             sleepTime,
             sun
         };
+        
         //true is text
         //flase is yes no
         static bool[] answerType = { true, false, false, false, false, true, true, true, false};
@@ -39,35 +43,39 @@ namespace JackCare
 
         static bool firstTime = true;
         [STAThread]
+
+        #endregion
+
         static void Main()
         {
             AppDomain.CurrentDomain.ProcessExit += OnExit;
 
-
-
             firstTime = GetFirstTimeOpened();
             if(firstTime)
             {
-                //SleepUntill(22);
+                SleepUntill(22);
                 MessageBox.Show("Hello Jack. This is JackCare, a program that is unclosable and unremovable. " +
                     "It will monitor your health through a multitude of questions that will be asked daily. " +
                     "This is for the betterment of your own health and as such it is important that you answer truthfully. " +
                     "\n I love you so very much and this is my nerdy way of helping. <3" +
                     "\n Your first set of questions will come tomorrow.");
             }
-            List<string> questions =new List<string>();
+            List<string> questions = new List<string>();
             List<string> answers = new List<string>();
             while(true)
             {
-                SleepUntill(17);
+                SleepUntill(19);
                 SystemSounds.Exclamation.Play();
                 BoolInputForm BinputForm;
                 TextInputForm TinputForm;
                 Random rnd = new Random();
+
+
                 #region Forms
-                for (int i = 0; i < question.GetLength(0); i++)
+
+                for (int i = 0; i < question.Length; i++)
                 {
-                    string q = question[i] [rnd.Next(question.GetLength(1))];
+                    string q = question[i] [rnd.Next(question[i].Length)];
                     if (answerType[i])
                     {
                         TinputForm = new TextInputForm(q,250);
@@ -80,51 +88,67 @@ namespace JackCare
 
                         answers.Add(BinputForm.GetAnswer());
                     }
-                    questions.Add(q = question[i][0]);
+                    questions.Add(question[i][0]);
                 }
                 #endregion
+
+
                 WriteFile(questions.ToArray(), answers.ToArray());
                 firstTime = false;
-            }
+                SetFirstTimeOpened();
 
+                MessageBox.Show("I love you <3", "I love you", MessageBoxButtons.OK);
+            }
+            
             AppDomain.CurrentDomain.ProcessExit -= OnExit;
         }
         
         #region Save and exit functions
         private static void OnExit(object sender, EventArgs e)
         {
-            string filePath = @"C:\JackCare\Save.txt";
-            
-            using (StreamWriter writer = new StreamWriter(filePath))
-            {
-                writer.Write(firstTime.ToString());
-            }
             MessageBox.Show("I love you", "I love you", MessageBoxButtons.OK);
         }
         public static bool GetFirstTimeOpened()
         {
-            string filePath = @"C:\JackCare\Save.txt";
+            string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            string folderPath = Path.Combine(documentsPath, "JackCare");
+            Directory.CreateDirectory(folderPath);
+            string filePath = Path.Combine(folderPath, "Save.txt");
+
             // Read the bool value from the file
-            using (StreamReader reader = new StreamReader(filePath))
+            if (File.Exists(filePath))
             {
-                bool firstTime;
-                if(bool.TryParse(reader.ReadToEnd(), out firstTime))
+                using (StreamReader reader = new StreamReader(filePath))
                 {
-                    return firstTime;
-                }
-                else
-                {
-                    using (StreamWriter writer = new StreamWriter(filePath))
+                    bool firstTime;
+                    if (bool.TryParse(reader.ReadToEnd(), out firstTime))
                     {
-                        writer.Write(firstTime.ToString());
-                        return true;
+                        return firstTime;
                     }
                 }
+            }
 
+            // If the file doesn't exist or couldn't be parsed, create it and write a default value to it
+            bool defaultValue = true;
+            using (StreamWriter writer = new StreamWriter(filePath))
+            {
+                writer.Write(defaultValue.ToString());
+            }
+            return defaultValue;
+        }
+        public static void SetFirstTimeOpened()
+        {
+            string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            string folderPath = Path.Combine(documentsPath, "JackCare");
+            Directory.CreateDirectory(folderPath);
+            string filePath = Path.Combine(folderPath, "Save.txt");
+
+            using (StreamWriter writer = new StreamWriter(filePath))
+            {
+                writer.Write(firstTime.ToString());
             }
         }
         #endregion 
-
         public static void SleepUntill(int hour, int min = 0, int second = 0)
         {
             DateTime now = DateTime.Now;
@@ -141,7 +165,6 @@ namespace JackCare
             Thread.Sleep(timeUntilTarget);
         }
 
-
         private static void WriteFile(string[] question, string[] answer)
         {
             string text = "";
@@ -157,7 +180,7 @@ namespace JackCare
             Directory.CreateDirectory(folderPath);
 
             DateTime dateTime = DateTime.UtcNow.Date;
-            string name = dateTime.ToString("dd / MM / yy");
+            string name = dateTime.ToString("dd/MM/yy");
 
             // Create a new text file inside the new folder and write the user's input to it
             string filePath = Path.Combine(folderPath, "JackCare-" + name + ".txt");
@@ -165,8 +188,31 @@ namespace JackCare
             {
                 writer.Write(text);
             }
+            SendMail(filePath);
+        }
+
+        public static void SendMail(string filePath)
+        {
+            // Configure the SMTP client
+            SmtpClient client = new SmtpClient("smtp.Outlook.com", 587);
+            client.EnableSsl = true;
+            client.Credentials = new NetworkCredential("jackcare666@gmail.com", "Superdog123");
+
+            // Compose the email message
+            MailMessage message = new MailMessage();
+            message.From = new MailAddress("jackcare666@gmail.com");
+            message.To.Add("jackcare666@gmail.com");
+            DateTime dateTime = DateTime.UtcNow.Date;
+            string name = dateTime.ToString("dd/MM/yy");
+            message.Subject = "JackCare-" + name;
+            message.Body = "";
+            message.Attachments.Add(new Attachment(filePath));
+
+            // Send the email message
+            client.Send(message);
         }
     }
+
 
     class BoolInputForm : Form
     {
@@ -193,7 +239,7 @@ namespace JackCare
             yesButton = new Button();
             yesButton.Text = "Yes";
             yesButton.Left = 50;
-            yesButton.Top = 90;
+            yesButton.Top = 80;
             yesButton.Click += yesButton_Click;
             Controls.Add(yesButton);
 
@@ -201,7 +247,7 @@ namespace JackCare
             noButton = new Button();
             noButton.Text = "No";
             noButton.Left = 150;
-            noButton.Top = 90;
+            noButton.Top = 80;
             noButton.Click += noButton_Click;
             Controls.Add(noButton);
         }
@@ -230,7 +276,6 @@ namespace JackCare
         }
         
     }
-
 
     class TextInputForm : Form
     {
@@ -263,7 +308,7 @@ namespace JackCare
             nextButton = new Button();
             nextButton.Text = "next";
             nextButton.Left = 100;
-            nextButton.Top = 90;
+            nextButton.Top = 80;
             nextButton.Click += nextButton_Click;
             Controls.Add(nextButton);
 
