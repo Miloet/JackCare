@@ -8,3 +8,12 @@ C:\Users\Miloe\source\repos\JackCare\JackCare\obj\Debug\JackCare.csproj.Generate
 C:\Users\Miloe\source\repos\JackCare\JackCare\obj\Debug\JackCare.csproj.CoreCompileInputs.cache
 C:\Users\Miloe\source\repos\JackCare\JackCare\obj\Debug\JackCare.exe
 C:\Users\Miloe\source\repos\JackCare\JackCare\obj\Debug\JackCare.pdb
+C:\Users\milo.zanderfrenell\Documents\GitHub\JackCare\bin\Debug\JackCare.exe.config
+C:\Users\milo.zanderfrenell\Documents\GitHub\JackCare\bin\Debug\JackCare.exe
+C:\Users\milo.zanderfrenell\Documents\GitHub\JackCare\bin\Debug\JackCare.pdb
+C:\Users\milo.zanderfrenell\Documents\GitHub\JackCare\obj\Debug\JackCare.csprojAssemblyReference.cache
+C:\Users\milo.zanderfrenell\Documents\GitHub\JackCare\obj\Debug\JackCare.Properties.Resources.resources
+C:\Users\milo.zanderfrenell\Documents\GitHub\JackCare\obj\Debug\JackCare.csproj.GenerateResource.cache
+C:\Users\milo.zanderfrenell\Documents\GitHub\JackCare\obj\Debug\JackCare.csproj.CoreCompileInputs.cache
+C:\Users\milo.zanderfrenell\Documents\GitHub\JackCare\obj\Debug\JackCare.exe
+C:\Users\milo.zanderfrenell\Documents\GitHub\JackCare\obj\Debug\JackCare.pdb

@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Threading;
 using System.Windows.Forms;
+using System.Drawing;
 
 namespace JackCare
 {
@@ -55,7 +56,7 @@ namespace JackCare
             firstTime = GetFirstTimeOpened();
             if(firstTime)
             {
-                SleepUntil(22);
+                //SleepUntil(22);
                 MessageBox.Show("Hello Jack. This is JackCare, a program that is unclosable and unremovable. " +
                     "It will monitor your health through a multitude of questions that will be asked daily. " +
                     "This is for the betterment of your own health and as such it is important that you answer truthfully. " +
@@ -66,7 +67,7 @@ namespace JackCare
             List<string> answers = new List<string>();
             while(true)
             {
-                SleepUntil(19);
+                //SleepUntil(19);
                 SystemSounds.Exclamation.Play();
                 BoolInputForm BinputForm;
                 TextInputForm TinputForm;
@@ -256,6 +257,8 @@ namespace JackCare
             yesButton.Left = 50;
             yesButton.Top = 80;
             yesButton.Click += yesButton_Click;
+            yesButton.ForeColor = Color.FromArgb(113, 245, 196);
+            yesButton.BackColor = Color.FromArgb(6, 125, 81);
             Controls.Add(yesButton);
 
             // Add a button
@@ -264,6 +267,8 @@ namespace JackCare
             noButton.Left = 150;
             noButton.Top = 80;
             noButton.Click += noButton_Click;
+            noButton.BackColor = Color.FromArgb(94, 23, 13);
+            noButton.ForeColor = Color.FromArgb(245, 200, 193);
             Controls.Add(noButton);
         }
         private void yesButton_Click(object sender, EventArgs e)
@@ -318,9 +323,11 @@ namespace JackCare
 
             // Add a button
             nextButton = new Button();
-            nextButton.Text = "next";
+            nextButton.Text = "Next Question";
             nextButton.Left = 100;
             nextButton.Top = 80;
+            nextButton.ForeColor = Color.FromArgb(23, 115, 81);
+            nextButton.BackColor = Color.FromArgb(69, 247, 182);
             nextButton.Click += nextButton_Click;
             Controls.Add(nextButton);
         }
