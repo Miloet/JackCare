@@ -235,7 +235,6 @@ namespace JackCare
         private Label nameLabel;
         private Button yesButton;
         private Button noButton;
-
         public BoolInputForm(string question)
         {
             // Set up the form
@@ -267,7 +266,6 @@ namespace JackCare
             noButton.Click += noButton_Click;
             Controls.Add(noButton);
         }
-        
         private void yesButton_Click(object sender, EventArgs e)
         {
             // Close the form and return the user's input
@@ -278,7 +276,6 @@ namespace JackCare
             // Close the form and return the user's input
             DialogResult = DialogResult.No;
         }
-
         public string GetAnswer()
         {
             if (ShowDialog() == DialogResult.Yes)
@@ -290,7 +287,6 @@ namespace JackCare
                 return "No";
             }
         }
-        
     }
 
     class TextInputForm : Form
@@ -333,7 +329,6 @@ namespace JackCare
             // Close the form and return the user's input
             DialogResult = DialogResult.OK;
         }
-
         public string GetAnswer()
         {
             ShowDialog();
@@ -342,7 +337,6 @@ namespace JackCare
             
             
         }
-
     }
 
 }
