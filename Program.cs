@@ -22,6 +22,7 @@ namespace JackCare
         static string[] sleep = { "When did you go to sleep yesterday?", "What time did you go to bed yesterday?", "What time did you go to sleep last night?" };
         static string[] sleepTime = { "How long did you sleep for?", "How many hours did you sleep last night?", "How many hours did you sleep for?" };
         static string[] sun = { "Have you spent at least 20 min outside today?", "Have you spent any time outdoors today?", "Have you gotten any fresh air today?" };
+        static string[] love = { "Do you know that I love you?", "Have you thought about that I love you today?", "Hey, I love you <3! (yes = I love you too!, no = ...)" };
 
         static string[][] question =
         {
@@ -33,12 +34,13 @@ namespace JackCare
             drugs,
             sleep,
             sleepTime,
-            sun
+            sun,
+            love
         };
         
         //true is text
         //flase is yes no
-        static bool[] answerType = { true, false, false, false, false, true, true, true, false};
+        static bool[] answerType = { true, false, false, false, false, true, true, true, false, false};
         
 
         static bool firstTime = true;
@@ -53,7 +55,7 @@ namespace JackCare
             firstTime = GetFirstTimeOpened();
             if(firstTime)
             {
-                SleepUntill(22);
+                SleepUntil(22);
                 MessageBox.Show("Hello Jack. This is JackCare, a program that is unclosable and unremovable. " +
                     "It will monitor your health through a multitude of questions that will be asked daily. " +
                     "This is for the betterment of your own health and as such it is important that you answer truthfully. " +
@@ -64,7 +66,7 @@ namespace JackCare
             List<string> answers = new List<string>();
             while(true)
             {
-                SleepUntill(19);
+                SleepUntil(19);
                 SystemSounds.Exclamation.Play();
                 BoolInputForm BinputForm;
                 TextInputForm TinputForm;
@@ -149,11 +151,16 @@ namespace JackCare
             }
         }
         #endregion 
-        public static void SleepUntill(int hour, int min = 0, int second = 0)
+
+
+        //Sleep Untill makes the program sleep untill desired time and once that time is reached let the program continue.
+        //The function checks every min if the desired time has been reached so it can work despite the computer being in
+        //sleep mode.
+        public static void SleepUntil(int hour, int min = 0, int second = 0)
         {
             DateTime now = DateTime.Now;
 
-            // Calculate the time until 9:00 AM
+            // Calculate the time until the target time
             DateTime targetTime = new DateTime(now.Year, now.Month, now.Day, hour, min, second);
             if (now > targetTime)
             {
@@ -161,9 +168,18 @@ namespace JackCare
             }
             TimeSpan timeUntilTarget = targetTime - now;
 
+            // Ask for the desired time once every minute until the target time is reached
+            while (timeUntilTarget.TotalSeconds > 0)
+            {
+                Thread.Sleep(TimeSpan.FromMinutes(1));
+                now = DateTime.Now;
+                timeUntilTarget = targetTime - now;
+            }
+
             // Sleep the thread until the target time
             Thread.Sleep(timeUntilTarget);
         }
+
 
         private static void WriteFile(string[] question, string[] answer)
         {
@@ -311,8 +327,6 @@ namespace JackCare
             nextButton.Top = 80;
             nextButton.Click += nextButton_Click;
             Controls.Add(nextButton);
-
-          
         }
         private void nextButton_Click(object sender, EventArgs e)
         {
