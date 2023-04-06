@@ -56,7 +56,7 @@ namespace JackCare
             firstTime = GetFirstTimeOpened();
             if(firstTime)
             {
-                //SleepUntil(22);
+                SleepUntil(22);
                 MessageBox.Show("Hello Jack. This is JackCare, a program that is unclosable and unremovable. " +
                     "It will monitor your health through a multitude of questions that will be asked daily. " +
                     "This is for the betterment of your own health and as such it is important that you answer truthfully. " +
@@ -67,7 +67,7 @@ namespace JackCare
             List<string> answers = new List<string>();
             while(true)
             {
-                //SleepUntil(19);
+                SleepUntil(19);
                 SystemSounds.Exclamation.Play();
                 BoolInputForm BinputForm;
                 TextInputForm TinputForm;
@@ -197,7 +197,7 @@ namespace JackCare
             Directory.CreateDirectory(folderPath);
 
             DateTime dateTime = DateTime.UtcNow.Date;
-            string name = dateTime.ToString("dd/MM/yy");
+            string name = dateTime.ToString("dd-MM-yy");
 
             // Create a new text file inside the new folder and write the user's input to it
             string filePath = Path.Combine(folderPath, "JackCare-" + name + ".txt");
@@ -240,8 +240,9 @@ namespace JackCare
         {
             // Set up the form
             Text = "JackCare";
-            Width = 300;
-            Height = 150;
+            AutoSize = true;
+            Width = 7 * question.Length;
+            Height = 175;
 
             // Add a label
             nameLabel = new Label();
@@ -303,8 +304,9 @@ namespace JackCare
         {
             // Set up the form
             Text = "JackCare";
-            Width = 300;
-            Height = 150;
+            AutoSize = true;
+            Width = 7 * question.Length;
+            Height = 175;
 
             // Add a label
             nameLabel = new Label();
@@ -326,8 +328,9 @@ namespace JackCare
             nextButton.Text = "Next Question";
             nextButton.Left = 100;
             nextButton.Top = 80;
-            nextButton.ForeColor = Color.FromArgb(23, 115, 81);
-            nextButton.BackColor = Color.FromArgb(69, 247, 182);
+            nextButton.AutoSize = true;
+            nextButton.ForeColor = Color.FromArgb(156, 255, 239);
+            nextButton.BackColor = Color.FromArgb(27, 130, 113);
             nextButton.Click += nextButton_Click;
             Controls.Add(nextButton);
         }
