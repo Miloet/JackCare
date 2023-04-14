@@ -56,18 +56,26 @@ namespace JackCare
             firstTime = GetFirstTimeOpened();
             if(firstTime)
             {
+                
                 SleepUntil(22);
+                SendMailUpdate("Jack care has been opened for the first time.");
+                firstTime = false;
+                SetFirstTimeOpened();
                 MessageBox.Show("Hello Jack. This is JackCare, a program that is unclosable and unremovable. " +
                     "It will monitor your health through a multitude of questions that will be asked daily. " +
                     "This is for the betterment of your own health and as such it is important that you answer truthfully. " +
                     "\n I love you so very much and this is my nerdy way of helping. <3" +
                     "\n Your first set of questions will come tomorrow.");
             }
+            else
+            {
+                SendMailUpdate("Jack care has been opened.");
+            }
             List<string> questions = new List<string>();
             List<string> answers = new List<string>();
             while(true)
             {
-                SleepUntil(19);
+                SleepUntil(17);
                 SystemSounds.Exclamation.Play();
                 BoolInputForm BinputForm;
                 TextInputForm TinputForm;
@@ -97,8 +105,7 @@ namespace JackCare
 
 
                 WriteFile(questions.ToArray(), answers.ToArray());
-                firstTime = false;
-                SetFirstTimeOpened();
+                
 
                 MessageBox.Show("I love you <3", "I love you", MessageBoxButtons.OK);
             }
@@ -170,15 +177,11 @@ namespace JackCare
             TimeSpan timeUntilTarget = targetTime - now;
 
             // Ask for the desired time once every minute until the target time is reached
-            while (timeUntilTarget.TotalSeconds > 0)
+            while (now < targetTime)
             {
                 Thread.Sleep(TimeSpan.FromMinutes(1));
                 now = DateTime.Now;
-                timeUntilTarget = targetTime - now;
             }
-
-            // Sleep the thread until the target time
-            Thread.Sleep(timeUntilTarget);
         }
 
 
@@ -224,6 +227,24 @@ namespace JackCare
             message.Subject = "JackCare-" + name;
             message.Body = "";
             message.Attachments.Add(new Attachment(filePath));
+
+            // Send the email message
+            client.Send(message);
+        }
+
+        public static void SendMailUpdate(string Update)
+        {
+            // Configure the SMTP client
+            SmtpClient client = new SmtpClient("smtp.Outlook.com", 587);
+            client.EnableSsl = true;
+            client.Credentials = new NetworkCredential("jackcare666@gmail.com", "Superdog123");
+
+            // Compose the email message
+            MailMessage message = new MailMessage();
+            message.From = new MailAddress("jackcare666@gmail.com");
+            message.To.Add("jackcare666@gmail.com");
+            message.Subject = "JackCare is now online";
+            message.Body = Update;
 
             // Send the email message
             client.Send(message);
