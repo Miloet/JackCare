@@ -22,8 +22,11 @@ namespace JackCare
         static string[] drugs = { "How long ago did you drink alcohol or take drugs?", "When was the last time you consumed alcohol or drugs?", "How long ago it last was when you took drugs or alcohol?" };
         static string[] sleep = { "When did you go to sleep yesterday?", "What time did you go to bed yesterday?", "What time did you go to sleep last night?" };
         static string[] sleepTime = { "How long did you sleep for?", "How many hours did you sleep last night?", "How many hours did you sleep for?" };
+        static string[] pain = { "Have you been in pain today? :<" };
         static string[] sun = { "Have you spent at least 20 min outside today?", "Have you spent any time outdoors today?", "Have you gotten any fresh air today?" };
         static string[] love = { "Do you know that I love you?", "Have you thought about that I love you today?", "Hey, I love you <3! (yes = I love you too!, no = ...)" };
+
+        static int day = -1;
 
         static string[][] question =
         {
@@ -35,13 +38,14 @@ namespace JackCare
             drugs,
             sleep,
             sleepTime,
+            pain,
             sun,
             love
         };
         
         //true is text
         //flase is yes no
-        static bool[] answerType = { true, false, false, false, false, true, true, true, false, false};
+        static bool[] answerType = { true, false, false, false, false, true, true, true, true, false, false};
         
 
         static bool firstTime = true;
@@ -71,8 +75,7 @@ namespace JackCare
             {
                 SendMailUpdate("Jack care has been opened.");
             }
-            List<string> questions = new List<string>();
-            List<string> answers = new List<string>();
+            
             while(true)
             {
                 SleepUntil(17);
@@ -83,6 +86,9 @@ namespace JackCare
 
 
                 #region Forms
+
+                List<string> questions = new List<string>();
+                List<string> answers = new List<string>();
 
                 for (int i = 0; i < question.Length; i++)
                 {
@@ -99,7 +105,7 @@ namespace JackCare
 
                         answers.Add(BinputForm.GetAnswer());
                     }
-                    questions.Add(question[i][0]);
+                    questions.Add(q);
                 }
                 #endregion
 
@@ -170,11 +176,10 @@ namespace JackCare
 
             // Calculate the time until the target time
             DateTime targetTime = new DateTime(now.Year, now.Month, now.Day, hour, min, second);
-            if (now > targetTime)
+            if (now > targetTime || day == now.Day)
             {
                 targetTime = targetTime.AddDays(1);
             }
-            TimeSpan timeUntilTarget = targetTime - now;
 
             // Ask for the desired time once every minute until the target time is reached
             while (now < targetTime)
@@ -182,6 +187,7 @@ namespace JackCare
                 Thread.Sleep(TimeSpan.FromMinutes(1));
                 now = DateTime.Now;
             }
+            day = now.Day;
         }
 
 
